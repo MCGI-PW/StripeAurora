@@ -1,0 +1,33 @@
+﻿using System;
+
+namespace AuroraPet.Payments.Domain.Entities;
+
+public enum PlanTier
+{
+    Basic,
+    Premium
+}
+
+public class SubscriptionPlan
+{
+    public Guid Id { get; private set; }
+    public PlanTier Tier { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public decimal Price { get; private set; } 
+    public string StripePriceId { get; private set; } = string.Empty;
+    public bool Active { get; private set; }
+
+    private SubscriptionPlan() { } // EF Core
+
+    public SubscriptionPlan(PlanTier tier, string name, decimal price, string stripePriceId)
+    {
+        Id = Guid.NewGuid();
+        Tier = tier;
+        Name = name;
+        Price = price;
+        StripePriceId = stripePriceId;
+        Active = true;
+    }
+
+    public void Deactivate() => Active = false;
+}

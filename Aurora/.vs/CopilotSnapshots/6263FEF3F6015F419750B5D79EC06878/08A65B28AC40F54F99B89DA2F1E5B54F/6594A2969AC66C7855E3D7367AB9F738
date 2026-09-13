@@ -1,0 +1,63 @@
+﻿using System;
+
+using Microsoft.Extensions.Options;
+using Stripe;
+using AuroraPet.Payments.Application.Interfaces;
+using AuroraPet.Payments.Application.Options;
+
+namespace AuroraPet.Payments.Infrastructure.Payments;
+
+public class StripeSubscriptionService : ISubscriptionService
+{
+    private readonly StripeOptions _options;
+    private readonly ILogger<StripeSubscriptionService> _logger;
+
+    public StripeSubscriptionService(IOptions<StripeOptions> options, ILogger<StripeSubscriptionService> logger)
+    {
+        _options = options.Value;
+        _logger = logger;
+        StripeConfiguration.ApiKey = _options.SecretKey;
+    }
+
+    public async Task<(string subscriptionId, string clientSecret)> CreateSubscriptionAsync(
+        string firebaseUid, string customerEmail, string planTier, CancellationToken ct = default)
+    {
+        if (!_options.Plans.TryGetValue(planTier, out var priceId))
+            throw new ArgumentException($"Plano '{planTier}' não configurado.");
+
+        var customerService = new CustomerService();
+        var customer = await customerService.CreateAsync(new CustomerCreateOptions
+        {
+            Email = customerEmail,
+            Metadata = new Dictionary<string, string> { { "firebaseUid", firebaseUid } }
+        }, cancellationToken: ct);
+
+        var subscriptionService = new SubscriptionService();
+        var subscription = await subscriptionService.CreateAsync(new SubscriptionCreateOptions
+        {
+            Customer = customer.Id,
+            Items = new List<SubscriptionItemOptions>
+            {
+                new() { Price = priceId }
+            },
+            PaymentBehavior = "default_incomplete",
+            PaymentSettings = new SubscriptionPaymentSettingsOptions
+            {
+                SaveDefaultPaymentMethod = "on_subscription"
+            },
+            Expand = new List<string> { "latest_invoice.payment_intent" }
+        }, cancellationToken: ct);
+
+        _logger.LogInformation("Assinatura criada {SubscriptionId} para {FirebaseUid}", subscription.Id, firebaseUid);
+
+        var clientSecret = subscription.LatestInvoice?.PaymentIntentId;
+        return (subscription.Id, clientSecret);
+    }
+
+    public async Task CancelSubscriptionAsync(string stripeSubscriptionId, CancellationToken ct = default)
+    {
+        var service = new SubscriptionService();
+        await service.CancelAsync(stripeSubscriptionId, cancellationToken: ct);
+        _logger.LogInformation("Assinatura cancelada {SubscriptionId}", stripeSubscriptionId);
+    }
+}

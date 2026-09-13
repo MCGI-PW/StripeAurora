@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Controllers",
+    "\\Domain",
+    "\\Domain\\Entities",
+    "\\Payments",
+    "\\Payments\\Application",
+    "\\Payments\\Application\\Options"
+  ],
+  "SelectedNode": "\\Controllers\\SubscriptionController.cs",
+  "PreviewInSolutionExplorer": false
+}
