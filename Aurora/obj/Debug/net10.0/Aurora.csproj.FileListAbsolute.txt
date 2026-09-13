@@ -130,3 +130,4 @@ D:\Faculdade\4semestre\Challenge\.NET\Aurora\Aurora\bin\Debug\net10.0\runtimes\w
 D:\Faculdade\4semestre\Challenge\.NET\Aurora\Aurora\bin\Debug\net10.0\runtimes\linux\lib\net8.0\System.DirectoryServices.Protocols.dll
 D:\Faculdade\4semestre\Challenge\.NET\Aurora\Aurora\bin\Debug\net10.0\runtimes\osx\lib\net8.0\System.DirectoryServices.Protocols.dll
 D:\Faculdade\4semestre\Challenge\.NET\Aurora\Aurora\bin\Debug\net10.0\runtimes\win\lib\net8.0\System.DirectoryServices.Protocols.dll
+D:\Faculdade\4semestre\Challenge\.NET\Aurora\Aurora\obj\Debug\net10.0\Aurora.sourcelink.json

@@ -50,7 +50,7 @@ public class StripeSubscriptionService : ISubscriptionService
 
         _logger.LogInformation("Assinatura criada {SubscriptionId} para {FirebaseUid}", subscription.Id, firebaseUid);
 
-        var clientSecret = subscription.LatestInvoice.PaymentIntent.ClientSecret;
+        var clientSecret = subscription.LatestInvoice.ConfirmationSecret.ClientSecret;
         return (subscription.Id, clientSecret);
     }
 

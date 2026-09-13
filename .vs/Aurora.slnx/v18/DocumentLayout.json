@@ -3,8 +3,12 @@
   "WorkspaceRootPath": "D:\\Faculdade\\4semestre\\Challenge\\.NET\\Aurora\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E04DE699-BDAC-41FF-BA8A-9EB7AA9A0EEC}|Aurora\\Aurora.csproj|d:\\faculdade\\4semestre\\challenge\\.net\\aurora\\aurora\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E04DE699-BDAC-41FF-BA8A-9EB7AA9A0EEC}|Aurora\\Aurora.csproj|solutionrelative:aurora\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Faculdade\\4semestre\\Challenge\\.NET\\Aurora\\Aurora\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Aurora\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Faculdade\\4semestre\\Challenge\\.NET\\Aurora\\Aurora\\Payments\\StripeSubscriptionService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Aurora\\Payments\\StripeSubscriptionService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,11 +18,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StripeSubscriptionService.cs",
+              "DocumentMoniker": "D:\\Faculdade\\4semestre\\Challenge\\.NET\\Aurora\\Aurora\\Payments\\StripeSubscriptionService.cs",
+              "RelativeDocumentMoniker": "Aurora\\Payments\\StripeSubscriptionService.cs",
+              "ToolTip": "D:\\Faculdade\\4semestre\\Challenge\\.NET\\Aurora\\Aurora\\Payments\\StripeSubscriptionService.cs",
+              "RelativeToolTip": "Aurora\\Payments\\StripeSubscriptionService.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAACQAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-13T15:07:34.854Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
