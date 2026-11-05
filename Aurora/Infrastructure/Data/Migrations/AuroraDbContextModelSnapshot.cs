@@ -22,90 +22,129 @@ namespace Aurora.Infrastructure.Data.Migrations
 
             OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AuroraPet.Payments.Domain.Entities.SubscriptionPlan", b =>
+            modelBuilder.Entity("AuroraPet.Payments.Domain.Entities.Clinic", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("RAW(16)")
-                        .HasColumnName("ID");
+                        .HasColumnName("ID")
+                        .HasComment("Chave primaria da clinica (GUID gerado pela aplicacao).");
 
-                    b.Property<int>("Active")
+                    b.Property<bool>("Active")
                         .HasColumnType("NUMBER(1)")
-                        .HasColumnName("ACTIVE");
+                        .HasColumnName("ACTIVE")
+                        .HasComment("1 = clinica ativa na plataforma, 0 = desativada.");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Cnpj")
                         .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("NVARCHAR2(120)")
-                        .HasColumnName("NAME");
+                        .HasMaxLength(14)
+                        .HasColumnType("NVARCHAR2(14)")
+                        .HasColumnName("CNPJ")
+                        .HasComment("CNPJ da clinica, somente digitos.");
 
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("DECIMAL(18,2)")
-                        .HasColumnName("PRICE");
-
-                    b.Property<string>("StripePriceId")
+                    b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("NVARCHAR2(120)")
-                        .HasColumnName("STRIPE_PRICE_ID");
-
-                    b.Property<string>("Tier")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("NVARCHAR2(20)")
-                        .HasColumnName("TIER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StripePriceId")
-                        .IsUnique()
-                        .HasDatabaseName("UX_PLAN_STRIPE_PRICE");
-
-                    b.ToTable("TB_SUBSCRIPTION_PLAN", (string)null);
-                });
-
-            modelBuilder.Entity("AuroraPet.Payments.Domain.Entities.TutorSubscription", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("RAW(16)")
-                        .HasColumnName("ID");
-
-                    b.Property<DateTime>("CurrentPeriodEnd")
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasColumnName("CURRENT_PERIOD_END");
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)")
+                        .HasColumnName("EMAIL")
+                        .HasComment("E-mail administrativo usado na cobranca.");
 
                     b.Property<string>("FirebaseUid")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("NVARCHAR2(128)")
-                        .HasColumnName("FIREBASE_UID");
+                        .HasColumnName("FIREBASE_UID")
+                        .HasComment("UID da conta da clinica no Firebase Authentication.");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)")
+                        .HasColumnName("NAME")
+                        .HasComment("Razao social ou nome fantasia da clinica.");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Cnpj")
+                        .IsUnique()
+                        .HasDatabaseName("UX_CLINIC_CNPJ");
+
+                    b.HasIndex("FirebaseUid")
+                        .IsUnique()
+                        .HasDatabaseName("UX_CLINIC_FIREBASE_UID");
+
+                    b.ToTable("TB_CLINIC", null, t =>
+                        {
+                            t.HasComment("Clinicas veterinarias cadastradas no Aurora. E a entidade que contrata os planos de assinatura.");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                            Active = true,
+                            Cnpj = "12345678000190",
+                            Email = "contato@vidaanimal.com.br",
+                            FirebaseUid = "uid-clinica-vida-animal",
+                            Name = "Clinica Vida Animal"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                            Active = true,
+                            Cnpj = "98765432000155",
+                            Email = "financeiro@patasfelizes.com.br",
+                            FirebaseUid = "uid-clinica-patas-felizes",
+                            Name = "Clinica Patas Felizes"
+                        });
+                });
+
+            modelBuilder.Entity("AuroraPet.Payments.Domain.Entities.ClinicSubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("RAW(16)")
+                        .HasColumnName("ID")
+                        .HasComment("Chave primaria da assinatura (GUID gerado pela aplicacao).");
+
+                    b.Property<Guid>("ClinicId")
+                        .HasColumnType("RAW(16)")
+                        .HasColumnName("CLINIC_ID")
+                        .HasComment("Chave estrangeira para TB_CLINIC.ID - a clinica que contratou o plano.");
+
+                    b.Property<DateTime>("CurrentPeriodEnd")
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnName("CURRENT_PERIOD_END")
+                        .HasComment("Data/hora em que o periodo pago corrente se encerra.");
 
                     b.Property<Guid>("PlanId")
                         .HasColumnType("RAW(16)")
-                        .HasColumnName("PLAN_ID");
+                        .HasColumnName("PLAN_ID")
+                        .HasComment("Chave estrangeira para TB_SUBSCRIPTION_PLAN.ID - o plano contratado.");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("NVARCHAR2(20)")
-                        .HasColumnName("STATUS");
+                        .HasColumnName("STATUS")
+                        .HasComment("Ciclo de vida da assinatura: Incomplete, Active, PastDue ou Canceled.");
 
                     b.Property<string>("StripeCustomerId")
                         .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("NVARCHAR2(120)")
-                        .HasColumnName("STRIPE_CUSTOMER_ID");
+                        .HasColumnName("STRIPE_CUSTOMER_ID")
+                        .HasComment("Identificador do Customer correspondente na Stripe.");
 
                     b.Property<string>("StripeSubscriptionId")
                         .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("NVARCHAR2(120)")
-                        .HasColumnName("STRIPE_SUBSCRIPTION_ID");
+                        .HasColumnName("STRIPE_SUBSCRIPTION_ID")
+                        .HasComment("Identificador da Subscription correspondente na Stripe.");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FirebaseUid")
-                        .HasDatabaseName("IX_SUBSCRIPTION_FIREBASE_UID");
+                    b.HasIndex("ClinicId")
+                        .HasDatabaseName("IX_SUBSCRIPTION_CLINIC");
 
                     b.HasIndex("PlanId");
 
@@ -113,11 +152,114 @@ namespace Aurora.Infrastructure.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UX_SUBSCRIPTION_STRIPE_ID");
 
-                    b.ToTable("TB_TUTOR_SUBSCRIPTION", (string)null);
+                    b.ToTable("TB_CLINIC_SUBSCRIPTION", null, t =>
+                        {
+                            t.HasComment("Assinaturas contratadas pelas clinicas: associa TB_CLINIC a TB_SUBSCRIPTION_PLAN e espelha a subscription da Stripe.");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            ClinicId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                            CurrentPeriodEnd = new DateTime(2026, 12, 31, 23, 59, 59, 0, DateTimeKind.Utc),
+                            PlanId = new Guid("22222222-2222-2222-2222-222222222222"),
+                            Status = "Active",
+                            StripeCustomerId = "cus_aurora_vida_animal",
+                            StripeSubscriptionId = "sub_aurora_vida_animal"
+                        },
+                        new
+                        {
+                            Id = new Guid("44444444-4444-4444-4444-444444444444"),
+                            ClinicId = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                            CurrentPeriodEnd = new DateTime(2026, 10, 31, 23, 59, 59, 0, DateTimeKind.Utc),
+                            PlanId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Status = "Incomplete",
+                            StripeCustomerId = "cus_aurora_patas_felizes",
+                            StripeSubscriptionId = "sub_aurora_patas_felizes"
+                        });
                 });
 
-            modelBuilder.Entity("AuroraPet.Payments.Domain.Entities.TutorSubscription", b =>
+            modelBuilder.Entity("AuroraPet.Payments.Domain.Entities.SubscriptionPlan", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("RAW(16)")
+                        .HasColumnName("ID")
+                        .HasComment("Chave primaria do plano (GUID gerado pela aplicacao).");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("NUMBER(1)")
+                        .HasColumnName("ACTIVE")
+                        .HasComment("1 = plano disponivel para novas assinaturas, 0 = descontinuado.");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("NVARCHAR2(120)")
+                        .HasColumnName("NAME")
+                        .HasComment("Nome comercial do plano exibido na contratacao.");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("DECIMAL(18,2)")
+                        .HasColumnName("PRICE")
+                        .HasComment("Preco mensal do plano em reais.");
+
+                    b.Property<string>("StripePriceId")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("NVARCHAR2(120)")
+                        .HasColumnName("STRIPE_PRICE_ID")
+                        .HasComment("Identificador do Price correspondente na Stripe.");
+
+                    b.Property<string>("Tier")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)")
+                        .HasColumnName("TIER")
+                        .HasComment("Faixa do plano: Basic ou Premium.");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StripePriceId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_PLAN_STRIPE_PRICE");
+
+                    b.ToTable("TB_SUBSCRIPTION_PLAN", null, t =>
+                        {
+                            t.HasComment("Catalogo de planos de assinatura do Aurora, espelhando os precos cadastrados na Stripe.");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Active = true,
+                            Name = "Aurora Basico",
+                            Price = 29.90m,
+                            StripePriceId = "price_aurora_basico",
+                            Tier = "Basic"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            Active = true,
+                            Name = "Aurora Premium",
+                            Price = 59.90m,
+                            StripePriceId = "price_aurora_premium",
+                            Tier = "Premium"
+                        });
+                });
+
+            modelBuilder.Entity("AuroraPet.Payments.Domain.Entities.ClinicSubscription", b =>
+                {
+                    b.HasOne("AuroraPet.Payments.Domain.Entities.Clinic", null)
+                        .WithMany()
+                        .HasForeignKey("ClinicId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_SUBSCRIPTION_CLINIC");
+
                     b.HasOne("AuroraPet.Payments.Domain.Entities.SubscriptionPlan", null)
                         .WithMany()
                         .HasForeignKey("PlanId")
