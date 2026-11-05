@@ -9,8 +9,9 @@ public class AuroraDbContext : DbContext
     {
     }
 
+    public DbSet<Clinic> Clinics => Set<Clinic>();
     public DbSet<SubscriptionPlan> SubscriptionPlans => Set<SubscriptionPlan>();
-    public DbSet<TutorSubscription> TutorSubscriptions => Set<TutorSubscription>();
+    public DbSet<ClinicSubscription> ClinicSubscriptions => Set<ClinicSubscription>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

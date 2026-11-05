@@ -2,8 +2,14 @@
   "ExpandedNodes": [
     "",
     "\\Aurora",
-    "\\Aurora\\Payments"
+    "\\Aurora\\Infrastructure",
+    "\\Aurora\\Infrastructure\\Security",
+    "\\Aurora\\Payments",
+    "\\Aurora\\Payments\\Application",
+    "\\Aurora\\Payments\\Application\\Dtos",
+    "\\Aurora\\Payments\\Application\\Interfaces",
+    "\\Aurora\\Payments\\Application\\Options"
   ],
-  "SelectedNode": "\\Aurora\\Program.cs",
+  "SelectedNode": "\\Aurora.slnx",
   "PreviewInSolutionExplorer": false
 }

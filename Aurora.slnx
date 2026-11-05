@@ -1,3 +1,7 @@
 <Solution>
   <Project Path="Aurora/Aurora.csproj" />
+  <Folder Name="/tests/">
+    <Project Path="tests/Aurora.Tests.Unit/Aurora.Tests.Unit.csproj" />
+    <Project Path="tests/Aurora.Tests.Integration/Aurora.Tests.Integration.csproj" />
+  </Folder>
 </Solution>

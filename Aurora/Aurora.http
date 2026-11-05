@@ -1,6 +1,54 @@
 @Aurora_HostAddress = http://localhost:5287
 
-GET {{Aurora_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1) Login do administrador (seed de Development: admin@aurora.com / Admin@2026)
+# @name login
+POST {{Aurora_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@aurora.com",
+  "password": "Admin@2026"
+}
 
 ###
+@token = {{login.response.body.$.accessToken}}
+
+### 2) Cadastro publico de usuario (perfil Clinic)
+POST {{Aurora_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Recepcao Vida Animal",
+  "email": "recepcao@vidaanimal.com.br",
+  "password": "Senha@2026"
+}
+
+### 3) Dados do usuario logado
+GET {{Aurora_HostAddress}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### 4) Sem token -> 401
+GET {{Aurora_HostAddress}}/api/clinics
+
+### 5) Clinicas (autenticado)
+GET {{Aurora_HostAddress}}/api/clinics
+Authorization: Bearer {{token}}
+
+### 6) Planos (escrita exige perfil Admin)
+POST {{Aurora_HostAddress}}/api/plans
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tier": 1,
+  "name": "Aurora Premium Anual",
+  "price": 599.00,
+  "stripePriceId": "price_aurora_premium_anual"
+}
+
+### 7) Assinaturas
+GET {{Aurora_HostAddress}}/api/subscriptions
+Authorization: Bearer {{token}}
+
+### 8) Health check (publico)
+GET {{Aurora_HostAddress}}/health
